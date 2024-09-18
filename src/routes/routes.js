@@ -1,0 +1,15 @@
+export const routes = {
+  hompeage: "/",
+  login: "/login",
+  register: "/register",
+  forgotPassword: "/forgot-password",
+  resetPassword: "/reset-password",
+  profile: "/profile",
+  settings: "/settings",
+  logout: "/logout",
+  locations: "/locations",
+  uploadDocument: "/upload-document",
+  printerSelection: "/printer-selection",
+  printSetup: "/print-setup",
+  payment: "/payment",
+};
