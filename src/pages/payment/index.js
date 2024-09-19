@@ -46,7 +46,7 @@ const PaymentPage = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Print request successful", data);
-        navigate(routes.confirmationPage);
+        navigate(routes.success);
       })
       .catch((error) => {
         console.error("Error printing file:", error);
