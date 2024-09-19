@@ -6,15 +6,17 @@ import BackButton from "../../components/shared/back-button";
 import Button from "../../components/shared/button";
 import useFileStore from "../../stores/useFileStore";
 import { useNavigate } from "react-router-dom";
+
 import { Document, Page } from "react-pdf";
+
 import { pdfjs } from "react-pdf";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
   import.meta.url
 ).toString();
-// pdfjs
-// pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@2.10.377/build/pdf.worker.min.js`; // Use a stable version
+
+// pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.entry.js";
 
 const PrintSetupPage = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
