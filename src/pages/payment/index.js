@@ -104,9 +104,9 @@ const PaymentPage = () => {
           <div className="space-y-4">
             <PaystackButton
               text="Pay now"
-              className="w-full bg-blue-400  text-white font-semibold py-3 rounded-lg transition duration-300"
+              className="w-full bg-blue-400 text-white font-semibold py-3 rounded-lg transition duration-300"
               currency="ghs"
-              email="elvis@gmail.com" // Use the actual user email
+              email={`user${Math.floor(Math.random() * 1000)}@gmail.com`} // Use a random user email
               amount={calculateTotalCost() * 100} // Use the calculated amount
               publicKey={process.env.REACT_APP_PAYSTACK_PUBLIC_KEY} // Use the public key from environment variables
               onSuccess={onSuccess} // Use the onSuccess function defined earlier

@@ -12,4 +12,5 @@ export const routes = {
   printerSelection: "/printer-selection",
   printSetup: "/print-setup",
   payment: "/payment",
+  success: "/success",
 };

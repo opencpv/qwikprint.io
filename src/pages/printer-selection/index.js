@@ -15,7 +15,9 @@ const PrinterSelectionPage = () => {
   useEffect(() => {
     const fetchPrinters = async () => {
       try {
-        const response = await fetch("http://localhost:5000/printers"); // Update with your API endpoint
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/printers`
+        ); // Update with your API endpoint
         const data = await response.json();
         console.log(data);
         setPrinters(data); // Set the fetched printers

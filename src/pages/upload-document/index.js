@@ -20,7 +20,7 @@ const UploadDocumentPage = () => {
       const formData = new FormData();
       formData.append("sampleFile", uploadedFiles[0]);
       const response = await axios.post(
-        "http://localhost:5000/upload",
+        `${process.env.REACT_APP_BACKEND_URL}/upload`,
         formData,
         {
           headers: {
