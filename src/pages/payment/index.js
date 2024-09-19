@@ -19,7 +19,7 @@ const PaymentPage = () => {
       printerConfig.costPerPage
     ).toFixed(2);
   };
-
+  const printUrl = `${process.env.REACT_APP_BACKEND_URL}/print`;
   // const config = {
   //   reference: uuidv4(),
   //   email: "elvis@gmail.com", // Replace with actual user email
@@ -33,7 +33,8 @@ const PaymentPage = () => {
     console.log("Payment successful", reference);
 
     // Make API request to print file
-    fetch("http://localhost:5000/print", {
+    fetch(printUrl, {
+      // Use printUrl instead of hardcoded URL
       method: "POST",
       headers: {
         "Content-Type": "application/json",
