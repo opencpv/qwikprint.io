@@ -4,44 +4,64 @@ import useFileStore from "../../stores/useFileStore";
 import Button from "../../components/shared/button";
 import { routes } from "../../routes/routes";
 import usePrinterConfigStore from "../../stores/usePrinterConfigStore";
-import { usePaystackPayment } from "react-paystack";
+// import { usePaystackPayment } from "react-paystack";
+// import { v4 as uuidv4 } from "uuid"; // Add this import at the top
+import { PaystackButton } from "react-paystack";
 
 const PaymentPage = () => {
   const navigate = useNavigate();
-  const { uploadedFiles } = useFileStore();
+  const { uploadedFiles, filePageNumber } = useFileStore();
   const { printerConfig } = usePrinterConfigStore();
-
   const calculateTotalCost = () => {
-    const totalPages = uploadedFiles.reduce((sum, file) => sum + file.pages, 0);
     return (
-      totalPages *
+      filePageNumber *
       printerConfig.copies *
       printerConfig.costPerPage
     ).toFixed(2);
   };
 
-  const config = {
-    reference: new Date().getTime().toString(),
-    email: "elvis@gmail.com", // Replace with actual user email
-    amount: 20000, // Convert to pesewas
-    publicKey: "pk_test_8d4d7fd91874cc76ea04ef4d76fb3c346dc593dd",
-    currency: "GHS",
-  };
+  // const config = {
+  //   reference: uuidv4(),
+  //   email: "elvis@gmail.com", // Replace with actual user email
+  //   amount: calculateTotalCost() * 100, // Convert to pesewas
+  //   publicKey: process.env.REACT_APP_PAYSTACK_PUBLIC_KEY,
+
+  //   currency: "GHS",
+  // };
 
   const onSuccess = (reference) => {
     console.log("Payment successful", reference);
-    navigate(routes.confirmationPage);
+
+    // Make API request to print file
+    fetch("http://localhost:5000/print", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        filename: uploadedFiles[0].name,
+        printerName: printerConfig.model,
+      }), // Send the payment reference
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Print request successful", data);
+        navigate(routes.confirmationPage);
+      })
+      .catch((error) => {
+        console.error("Error printing file:", error);
+      });
   };
 
   const onClose = () => {
     console.log("Payment window closed");
   };
 
-  const initializePayment = usePaystackPayment(config);
+  // const initializePayment = usePaystackPayment(config);
 
-  const handlePayment = () => {
-    initializePayment(onSuccess, onClose);
-  };
+  // const handlePayment = () => {
+  //   initializePayment(onSuccess, onClose); // Ensure onSuccess and onClose are passed correctly
+  // };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
@@ -82,12 +102,23 @@ const PaymentPage = () => {
             <span className="text-green-600">₵{calculateTotalCost()}</span>
           </div>
           <div className="space-y-4">
-            <Button
+            <PaystackButton
+              text="Pay now"
+              className="w-full bg-blue-400  text-white font-semibold py-3 rounded-lg transition duration-300"
+              currency="ghs"
+              email="elvis@gmail.com" // Use the actual user email
+              amount={calculateTotalCost() * 100} // Use the calculated amount
+              publicKey={process.env.REACT_APP_PAYSTACK_PUBLIC_KEY} // Use the public key from environment variables
+              onSuccess={onSuccess} // Use the onSuccess function defined earlier
+              onClose={onClose} // Use the onClose function defined earlier
+            />
+            {/* <Button
+              color="primary"
+              className="w-full bg-blue-400  text-white font-semibold py-3 rounded-lg transition duration-300"
               onClick={handlePayment}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-300"
             >
               Pay Now
-            </Button>
+            </Button> */}
             <Button
               onClick={() => navigate(routes.printSetup)}
               className="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 rounded-lg transition duration-300"

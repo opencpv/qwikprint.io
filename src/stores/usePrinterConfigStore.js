@@ -8,7 +8,7 @@ const usePrinterConfigStore = create((set) => ({
   // Printer configuration
   printerConfig: {
     model: null,
-    paperSize: null,
+    paperSize: "A4",
     orientation: "portrait",
     quality: "normal",
     copies: 1,

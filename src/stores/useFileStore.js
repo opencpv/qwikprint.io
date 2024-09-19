@@ -3,6 +3,7 @@ import { create } from "zustand";
 const useFileStore = create((set, get) => ({
   uploadedFiles: [],
   fileURLs: null,
+  filePageNumber: 0, // {{ edit_1 }} Add independent filePageNumber
 
   addFile: (file) =>
     set((state) => ({
@@ -35,6 +36,10 @@ const useFileStore = create((set, get) => ({
     const state = get();
     return state.uploadedFiles.length;
   },
+
+  setFilePageNumber: (
+    pageNumber // {{ edit_2 }} Add method to set filePageNumber
+  ) => set({ filePageNumber: pageNumber }),
 }));
 
 export default useFileStore;

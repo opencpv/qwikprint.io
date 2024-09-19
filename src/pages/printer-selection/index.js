@@ -3,32 +3,29 @@ import BackButton from "../../components/shared/back-button";
 import { routes } from "../../routes/routes";
 import usePrinterConfigStore from "../../stores/usePrinterConfigStore";
 import PrinterCard from "../../components/pages/location-page/printer-selection/printer-card";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/shared/button";
 
 const PrinterSelectionPage = () => {
   const { selectedSite } = usePrinterConfigStore();
   const navigate = useNavigate();
-  const printers = [
-    {
-      icon: CgPrinter,
-      name: "Raptor x2o11 Full boost - 1",
-      status: "Available",
-      id: 1,
-    },
-    {
-      icon: CgPrinter,
-      name: "Hp laser jet printer",
-      status: "Available",
-    },
-    {
-      icon: CgPrinter,
-      name: "Raptor x2o11 Full boost - 2",
-      status: "Not available",
-      id: 3,
-    },
-  ];
+  const [printers, setPrinters] = useState([]); // Initialize state for printers
+
+  useEffect(() => {
+    const fetchPrinters = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/printers"); // Update with your API endpoint
+        const data = await response.json();
+        console.log(data);
+        setPrinters(data); // Set the fetched printers
+      } catch (error) {
+        console.error("Error fetching printers:", error);
+      }
+    };
+
+    fetchPrinters();
+  }, []);
 
   useEffect(() => {
     if (!selectedSite) {
@@ -49,13 +46,12 @@ const PrinterSelectionPage = () => {
           {selectedSite}
         </p>
         <ul className="flex flex-col gap-3">
-          {printers.map((printer, index) => (
+          {printers?.map((printer, index) => (
             <li key={index}>
               <PrinterCard
-                icon={printer.icon}
+                icon={CgPrinter}
                 name={printer.name}
-                status={printer.status}
-                id={printer.id}
+                status={"Available"}
               />
             </li>
           ))}

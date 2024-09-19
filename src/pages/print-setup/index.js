@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 // Remove react-pdf import
 import { routes } from "../../routes/routes";
 import PrintSettingsModal from "../../components/print-settings-modal";
 import BackButton from "../../components/shared/back-button";
 import Button from "../../components/shared/button";
 import useFileStore from "../../stores/useFileStore";
-import { Document, Page } from "react-pdf";
 import { useNavigate } from "react-router-dom";
+import { Document, Page } from "react-pdf";
 import { pdfjs } from "react-pdf";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
   import.meta.url
 ).toString();
+// pdfjs
+// pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@2.10.377/build/pdf.worker.min.js`; // Use a stable version
 
 const PrintSetupPage = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -23,22 +25,16 @@ const PrintSetupPage = () => {
     paperSize: "a4",
     colorMode: "color",
   });
-  const { uploadedFiles, fileURLs } = useFileStore();
+  const { uploadedFiles, fileURLs, setFilePageNumber } = useFileStore();
   const [numPages, setNumPages] = useState();
   const [pageNumber, setPageNumber] = useState(1);
   const [error, setError] = useState(null); // Add state for error handling
 
   // Remove onDocumentLoadSuccess function
-  console.log(fileURLs[0]);
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
+    setFilePageNumber(numPages);
   }
-
-  // Add this function to calculate the scale
-  const calculateScale = (width) => {
-    const maxWidth = width - 40; // Subtracting 40px for padding
-    return maxWidth / 595; // 595 is the default width of an A4 page in points
-  };
 
   const handlePrint = () => {
     console.log("Printing with settings:", printSettings);
@@ -78,7 +74,6 @@ const PrintSetupPage = () => {
               Error loading document: {error.message}
             </p>
           )}{" "}
-          // Display error message
         </div>
       </div>
       <div className="w-fill mb-2 text-center"></div>
@@ -93,16 +88,18 @@ const PrintSetupPage = () => {
           Next
         </Button>
       </div>
-      <Button
-        width="full"
-        color="secondary"
-        onClick={() => setIsSettingsOpen(true)}
-      >
-        Print Settings
-      </Button>
-      <Button width="full" color="primary" onClick={handlePrint}>
-        Print
-      </Button>
+      <div className="flex flex-col gap-2 pb-2">
+        <Button
+          width="full"
+          color="secondary"
+          onClick={() => setIsSettingsOpen(true)}
+        >
+          Print Settings
+        </Button>
+        <Button width="full" color="primary" onClick={handlePrint}>
+          Print
+        </Button>
+      </div>
       <PrintSettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}

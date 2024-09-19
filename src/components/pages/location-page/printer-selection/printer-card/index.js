@@ -27,7 +27,7 @@ const PrinterCard = ({ icon: Icon, name, status, id }) => {
         <Icon
           className={`text-3xl ${isSelected ? "text-white" : "text-slate-800"}`}
         />
-        <p className="font-semibold">{name}</p>
+        <p className="font-semibold truncate">{name}</p>
       </div>
       <p
         className={`text-right text-[10px] text-white px-3 py-1 w-fit rounded-full ${
